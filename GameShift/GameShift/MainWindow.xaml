@@ -1,0 +1,766 @@
+<ui:FluentWindow
+    x:Class="GameShift.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    mc:Ignorable="d"
+    Title="GameShift"
+    Width="1020"
+    Height="780"
+    MinWidth="1020"
+    MaxWidth="1020"
+    MinHeight="780"
+    MaxHeight="780"
+    SizeToContent="Manual"
+    ResizeMode="NoResize"
+    WindowStartupLocation="CenterScreen"
+    WindowBackdropType="Mica"
+    ExtendsContentIntoTitleBar="True"
+    WindowCornerPreference="Round"
+    Background="Transparent"
+    FontFamily="Segoe UI Variable, Segoe UI"
+    TextOptions.TextFormattingMode="Ideal"
+    TextOptions.TextRenderingMode="ClearType"
+    UseLayoutRounding="True">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- TitleBar -->
+            <RowDefinition Height="*"/>
+            <!-- Контент -->
+            <RowDefinition Height="Auto"/>
+            <!-- Нижняя панель -->
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" ShowMaximize="False" ShowMinimize="True"/>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             ОСНОВНОЙ КОНТЕНТ
+             ═══════════════════════════════════════════════════════════════ -->
+        <Grid Grid.Row="1" Margin="32,12,32,8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <!-- Шапка -->
+                <RowDefinition Height="208"/>
+                <!-- Hero + Игровой дисплей -->
+                <RowDefinition Height="16"/>
+                <!-- Гаттер -->
+                <RowDefinition Height="*"/>
+                <!-- Главная сетка 3 колонок -->
+            </Grid.RowDefinitions>
+
+            <!-- ─── ШАПКА ─────────────────────────────────────────────── -->
+            <Grid Grid.Row="0" Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Логотип -->
+                <Grid Width="56" Height="56" Margin="0,0,18,0">
+                    <Ellipse Fill="#10FFFFFF"/>
+                    <Ellipse StrokeThickness="2"
+                             Stroke="{StaticResource ActiveBrush}"
+                             Opacity="0.5"/>
+                    <iconPacks:PackIconMaterial Kind="GamepadVariant"
+                                                Width="24" Height="24"
+                                                Foreground="{StaticResource ActiveBrush}"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"/>
+                </Grid>
+
+                <!-- Название и слоган -->
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock FontSize="30" FontWeight="Bold"
+                               FontFamily="Segoe UI Variable Display, Segoe UI">
+                        <Run Text="Game" Foreground="White"/><Run Text="Shift"
+                            Foreground="{StaticResource ActiveBrush}"/>
+                    </TextBlock>
+                    <TextBlock Text="Автоматическая оптимизация игрового пространства"
+                               FontSize="12"
+                               Foreground="{StaticResource MutedBrush}"
+                               Margin="0,2,0,0"/>
+                </StackPanel>
+
+                <!-- Бейдж лицензии. Tag = "warn" | "danger" — управляет цветом
+                     через триггеры в LicensePill style (см. App.xaml). -->
+                <Border x:Name="LicenseBadge" Grid.Column="2"
+                        Style="{StaticResource LicensePill}"
+                        Tag="warn"
+                        VerticalAlignment="Center"
+                        MouseLeftButtonUp="License_Click"
+                        ToolTip="Информация о лицензии">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterial x:Name="LicenseIcon"
+                                                    Kind="ShieldOutline"
+                                                    Width="12" Height="12"
+                                                    Foreground="{StaticResource WarnBrush}"
+                                                    VerticalAlignment="Center"
+                                                    Margin="0,0,8,0"/>
+                        <TextBlock VerticalAlignment="Center" FontSize="11">
+                            <Run Text="Пробная версия"
+                                 FontWeight="SemiBold"
+                                 Foreground="White"/>
+                            <Run Text=" · "
+                                 Foreground="{StaticResource DimBrush}"/>
+                            <Run x:Name="LicenseDays"
+                                 Text="30 дней"
+                                 Foreground="{StaticResource WarnBrush}"
+                                 FontWeight="SemiBold"/>
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- ─── ВЕРХНИЙ РЯД: Hero + Игровой дисплей ───────────────── -->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="320"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Hero -->
+                <Border Grid.Column="0" Style="{StaticResource GlassCardStatic}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="14"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="14"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Grid.Column="0" Width="40" Height="40" Margin="0,0,14,0">
+                                <Ellipse x:Name="HeroIconBg"
+                                         Fill="{StaticResource HeroIconBgActive}"/>
+                                <iconPacks:PackIconMaterial x:Name="HeroIcon"
+                                                            Kind="Power"
+                                                            Width="20" Height="20"
+                                                            Foreground="{StaticResource AccentBrush}"
+                                                            HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"/>
+                            </Grid>
+
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock x:Name="HeroTitle"
+                                           Text="Автоматизация включена"
+                                           FontSize="17" FontWeight="SemiBold"
+                                           Foreground="White"/>
+                                <TextBlock x:Name="HeroSubtitle"
+                                           Text="Система отслеживает подключение контроллера"
+                                           FontSize="12"
+                                           Foreground="{StaticResource MutedBrush}"
+                                           Margin="0,2,0,0"
+                                           TextTrimming="CharacterEllipsis"/>
+                            </StackPanel>
+
+                            <ui:ToggleSwitch x:Name="MainToggle" Grid.Column="2"
+                                             IsChecked="True"
+                                             VerticalAlignment="Center"
+                                             Checked="MainToggle_Checked"
+                                             Unchecked="MainToggle_Unchecked"/>
+                        </Grid>
+
+                        <Rectangle Grid.Row="2" Height="1"
+                                   Fill="{StaticResource DividerBrush}"/>
+
+                        <Grid Grid.Row="4" VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="14"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Grid.Column="0" Grid.Row="0">
+                                <TextBlock Text="ГЕЙМПАД"
+                                           Style="{StaticResource MicroLabel}"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <Ellipse x:Name="GamepadStatusDot"
+                                             Width="6" Height="6"
+                                             Fill="{StaticResource MutedBrush}"
+                                             VerticalAlignment="Center"
+                                             Margin="0,0,6,0"/>
+                                    <TextBlock x:Name="GamepadStatus"
+                                               Text="Не подключён"
+                                               Style="{StaticResource MiniStatValue}"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Grid.Row="0">
+                                <TextBlock Text="АКТИВНЫЙ ЭКРАН"
+                                           Style="{StaticResource MicroLabel}"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <Ellipse x:Name="ActiveDisplayDot"
+                                             Width="6" Height="6"
+                                             Fill="{StaticResource ActiveBrush}"
+                                             VerticalAlignment="Center"
+                                             Margin="0,0,6,0"/>
+                                    <TextBlock x:Name="ActiveDisplay"
+                                               Text="Redmi 23B NFS"
+                                               Style="{StaticResource MiniStatValue}"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="0" Grid.Row="2">
+                                <TextBlock Text="АУДИО"
+                                           Style="{StaticResource MicroLabel}"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <Ellipse x:Name="ActiveAudioDot"
+                                             Width="6" Height="6"
+                                             Fill="{StaticResource MutedBrush}"
+                                             VerticalAlignment="Center"
+                                             Margin="0,0,6,0"/>
+                                    <TextBlock x:Name="ActiveAudio"
+                                               Text="Realtek (Speakers)"
+                                               Style="{StaticResource MiniStatValue}"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Grid.Row="2">
+                                <TextBlock Text="STEAM"
+                                           Style="{StaticResource MicroLabel}"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <Ellipse x:Name="SteamStatusDot"
+                                             Width="6" Height="6"
+                                             Fill="{StaticResource MutedBrush}"
+                                             VerticalAlignment="Center"
+                                             Margin="0,0,6,0"/>
+                                    <TextBlock x:Name="SteamStatus"
+                                               Text="В режиме рабочего стола"
+                                               Style="{StaticResource MiniStatValue}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <!-- Игровой дисплей -->
+                <Border Grid.Column="2" Style="{StaticResource GlassCardStatic}">
+                    <StackPanel VerticalAlignment="Top">
+                        <StackPanel Style="{StaticResource CardHeader}">
+                            <iconPacks:PackIconMaterial Kind="Monitor"
+                                                        Style="{StaticResource SectionTitleIcon}"/>
+                            <TextBlock Text="Игровой дисплей"
+                                       Style="{StaticResource SectionTitle}"/>
+                        </StackPanel>
+
+                        <TextBlock Text="Переключать с" Style="{StaticResource SubLabel}"/>
+                        <ComboBox x:Name="SourceDisplayCombo"
+                                  SelectedIndex="0"
+                                  HorizontalAlignment="Stretch"
+                                  Margin="0,0,0,12"
+                                  SelectionChanged="DisplaySelection_Changed">
+                            <ComboBoxItem Content="Redmi 23B NFS"/>
+                            <ComboBoxItem Content="Samsung TV (HDMI)"/>
+                        </ComboBox>
+
+                        <TextBlock Text="Переключать на" Style="{StaticResource SubLabel}"/>
+                        <ComboBox x:Name="TargetDisplayCombo"
+                                  SelectedIndex="1"
+                                  HorizontalAlignment="Stretch"
+                                  SelectionChanged="DisplaySelection_Changed">
+                            <ComboBoxItem Content="Redmi 23B NFS"/>
+                            <ComboBoxItem Content="Samsung TV (HDMI)"/>
+                        </ComboBox>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- ─── ОСНОВНАЯ СЕТКА: 3 НЕЗАВИСИМЫЕ КОЛОНКИ ─────────────────
+                 Каждая колонка имеет собственный внутренний Grid, поэтому
+                 высоты её карточек НЕ синхронизируются с соседними
+                 колонками. Это решает проблему «короткий Геймпад в одной
+                 строке с длинной Комбинацией → пустое место под Геймпад».
+
+                 Группировка карточек по семантике:
+                   Col 0: Геймпад (триггер)        + Переход (что переключаем)
+                   Col 2: Комбинация (триггер)     + Лаунчеры (что запускаем)
+                   Col 4: Параметры (общие настройки, во всю высоту)
+
+                 Раскладка по высоте: длинные карточки (Комбинация активации)
+                 поставлены в одной колонке с компактными (Лаунчеры),
+                 а более короткие триггеры (Геймпад) — с более ёмкими
+                 карточками действия (Переход). Это позволяет уложиться
+                 в 372px доступной высоты без обрезки контента.
+                 ────────────────────────────────────────────────────────── -->
+            <Grid Grid.Row="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- ═════ Col 0 — Геймпад (Auto) + Переход (*) ═════ -->
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="16"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Геймпад -->
+                    <Border Grid.Row="0"
+                            Style="{StaticResource GlassCardStaticTight}">
+                        <StackPanel>
+                            <StackPanel Style="{StaticResource CardHeader}">
+                                <iconPacks:PackIconMaterial Kind="GamepadVariant"
+                                                            Style="{StaticResource SectionTitleIcon}"/>
+                                <TextBlock Text="Основной геймпад"
+                                           Style="{StaticResource SectionTitle}"/>
+                            </StackPanel>
+
+                            <ComboBox x:Name="GamepadCombo"
+                      HorizontalAlignment="Stretch"
+                      SelectionChanged="GamepadSelection_Changed"/>
+
+                            <Grid Margin="0,10,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <iconPacks:PackIconMaterial Kind="InformationOutline"
+                                                            Width="11" Height="11"
+                                                            Foreground="{StaticResource MutedBrush}"
+                                                            VerticalAlignment="Top"
+                                                            Margin="0,2,6,0"/>
+                                <TextBlock Grid.Column="1"
+                                           Text="Активируется при подключении устройства"
+                                           FontSize="11"
+                                           Foreground="{StaticResource MutedBrush}"
+                                           TextWrapping="Wrap"
+                                           LineHeight="14"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Переход -->
+                    <Border Grid.Row="2"
+                            Style="{StaticResource GlassCardStaticTight}">
+                        <StackPanel>
+                            <StackPanel Style="{StaticResource CardHeader}">
+                                <iconPacks:PackIconMaterial Kind="SwapHorizontal"
+                                                            Style="{StaticResource SectionTitleIcon}"/>
+                                <TextBlock Text="Переход"
+                                           Style="{StaticResource SectionTitle}"/>
+                            </StackPanel>
+
+                            <StackPanel Margin="0,0,0,12">
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                    <iconPacks:PackIconMaterial Kind="Television"
+                                                                Width="11" Height="11"
+                                                                Foreground="{StaticResource MutedBrush}"
+                                                                VerticalAlignment="Center"
+                                                                Margin="0,0,6,0"/>
+                                    <TextBlock Text="Режим дисплея"
+                                               FontSize="11"
+                                               Foreground="{StaticResource MutedBrush}"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <ComboBox x:Name="ModeCombo"
+                                          SelectedIndex="0"
+                                          HorizontalAlignment="Stretch"
+                                          SelectionChanged="AnyConfig_Changed">
+                                    <ComboBoxItem Content="Только целевой экран"/>
+                                    <ComboBoxItem Content="Целевой + источник"/>
+                                    <ComboBoxItem Content="Дублировать на оба"/>
+                                </ComboBox>
+                            </StackPanel>
+
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                    <iconPacks:PackIconMaterial Kind="VolumeHigh"
+                                                                Width="11" Height="11"
+                                                                Foreground="{StaticResource MutedBrush}"
+                                                                VerticalAlignment="Center"
+                                                                Margin="0,0,6,0"/>
+                                    <TextBlock Text="Аудиоустройство"
+                                               FontSize="11"
+                                               Foreground="{StaticResource MutedBrush}"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <ComboBox x:Name="AudioCombo"
+                                          SelectedIndex="0"
+                                          HorizontalAlignment="Stretch"
+                                          SelectionChanged="AnyConfig_Changed">
+                                    <ComboBoxItem Content="Samsung TV (HDMI Audio)"/>
+                                    <ComboBoxItem Content="Realtek (Speakers)"/>
+                                    <ComboBoxItem Content="SteelSeries Arctis"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- ═════ Col 2 — Комбинация активации (Auto) + Лаунчеры (*) ═════ -->
+                <Grid Grid.Column="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="16"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Комбинация активации -->
+                    <Border Grid.Row="0"
+                            Style="{StaticResource GlassCardStaticTight}">
+                        <StackPanel>
+                            <StackPanel Style="{StaticResource CardHeader}">
+                                <iconPacks:PackIconMaterial Kind="LightningBoltOutline"
+                                                            Style="{StaticResource SectionTitleIcon}"/>
+                                <TextBlock Text="Комбинация активации"
+                                           Style="{StaticResource SectionTitle}"/>
+                            </StackPanel>
+
+                            <!-- Поле комбинации.
+                                 Светлая полупрозрачная подложка (#0DFFFFFF, 5%
+                                 белого) — как у обычного input. Без чёрного.
+                                 Высота снижена с 48 до 36, чтобы карточка
+                                 Лаунчеров под ней не обрезалась. -->
+                            <Border MinHeight="36"
+                                    Background="#0DFFFFFF"
+                                    BorderBrush="#22FFFFFF"
+                                    BorderThickness="1"
+                                    CornerRadius="8"
+                                    Padding="12,6"
+                                    Margin="0,0,0,12">
+                                <Grid>
+                                    <TextBlock x:Name="ActivationComboPlaceholder"
+                                               Text="Комбинация не задана"
+                                               FontSize="12"
+                                               Foreground="{StaticResource MutedBrush}"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Center"/>
+
+                                    <WrapPanel x:Name="ActivationComboPanel"
+                                               Orientation="Horizontal"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Center"
+                                               Visibility="Collapsed"/>
+
+                                    <StackPanel x:Name="RecordingIndicator"
+                                                Orientation="Horizontal"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Visibility="Collapsed">
+                                        <Ellipse Width="8" Height="8"
+                                                 Fill="{StaticResource DangerBrush}"
+                                                 Margin="0,0,8,0"
+                                                 VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="RecordingHint"
+                                                   Text="Нажмите комбинацию (5)"
+                                                   FontSize="12"
+                                                   Foreground="White"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <!-- Кнопки управления.
+                                 Обе Secondary (нейтральная подложка), фиксированная
+                                 высота 36px чтобы корзина не схлопывалась.
+                                 Иконка записи зелёная — единственный акцент. -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="8"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <ui:Button x:Name="RecordComboButton" Grid.Column="0"
+                                           Appearance="Secondary"
+                                           Height="36"
+                                           Padding="14,0"
+                                           HorizontalAlignment="Stretch"
+                                           Click="RecordCombo_Click">
+                                    <StackPanel Orientation="Horizontal">
+                                        <iconPacks:PackIconMaterial x:Name="RecordButtonIcon"
+                                                                    Kind="RecordCircleOutline"
+                                                                    Width="14" Height="14"
+                                                                    Foreground="{StaticResource ActiveBrush}"
+                                                                    Margin="0,0,8,0"
+                                                                    VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="RecordButtonText"
+                                                   Text="Записать комбинацию"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </ui:Button>
+                                <ui:Button Grid.Column="2"
+                                           Appearance="Secondary"
+                                           Width="40"
+                                           Height="36"
+                                           Padding="0"
+                                           HorizontalContentAlignment="Center"
+                                           VerticalContentAlignment="Center"
+                                           Click="ClearCombo_Click"
+                                           ToolTip="Очистить комбинацию">
+                                    <iconPacks:PackIconMaterial Kind="TrashCanOutline"
+                                                                Width="16" Height="16"/>
+                                </ui:Button>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Лаунчеры -->
+                    <Border Grid.Row="2"
+                            Style="{StaticResource GlassCardStaticTight}">
+                        <StackPanel>
+                            <StackPanel Style="{StaticResource CardHeader}">
+                                <iconPacks:PackIconMaterial Kind="RocketLaunchOutline"
+                                                            Style="{StaticResource SectionTitleIcon}"/>
+                                <TextBlock Text="Лаунчеры"
+                                           Style="{StaticResource SectionTitle}"/>
+                            </StackPanel>
+
+                            <Grid Style="{StaticResource SettingRow}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <iconPacks:PackIconMaterial Kind="Steam"
+                                                            Style="{StaticResource RowLeadIcon}"/>
+                                <TextBlock Grid.Column="1"
+                                           Text="Steam Big Picture"
+                                           Style="{StaticResource RowLeadText}"/>
+                                <ui:ToggleSwitch Grid.Column="2" x:Name="SteamToggle"
+                                                 IsChecked="True"
+                                                 VerticalAlignment="Center"
+                                                 Checked="SteamToggle_Changed"
+                                                 Unchecked="SteamToggle_Changed"/>
+                            </Grid>
+
+                            <Rectangle Style="{StaticResource CardDivider}" Margin="0,0,0,10"/>
+
+                            <Grid Style="{StaticResource SettingRow}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <iconPacks:PackIconMaterial Kind="ApplicationOutline"
+                                                            Style="{StaticResource RowLeadIcon}"/>
+                                <TextBlock Grid.Column="1"
+                                           Text="Другой лаунчер"
+                                           Style="{StaticResource RowLeadText}"/>
+                                <ui:ToggleSwitch Grid.Column="2" x:Name="CustomLauncherToggle"
+                                                 IsChecked="False"
+                                                 VerticalAlignment="Center"
+                                                 Checked="CustomLauncherToggle_Changed"
+                                                 Unchecked="CustomLauncherToggle_Changed"/>
+                            </Grid>
+
+                            <Grid IsEnabled="{Binding IsChecked, ElementName=CustomLauncherToggle}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="8"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <ui:TextBox x:Name="CustomLauncherPath" Grid.Column="0"
+                                            Height="34"
+                                            VerticalAlignment="Center"
+                                            VerticalContentAlignment="Center"
+                                            IsReadOnly="True"
+                                            PlaceholderText="Путь не указан"
+                                            PlaceholderEnabled="True"
+                                            TextChanged="CustomLauncher_Changed"
+                                            ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"/>
+                                <ui:Button Grid.Column="2"
+                                           Height="35" Width="35"
+                                           Padding="0"
+                                           VerticalAlignment="Center"
+                                           Appearance="Secondary"
+                                           Click="BrowseLauncher_Click"
+                                           ToolTip="Выбрать файл лаунчера">
+                                    <iconPacks:PackIconMaterial Kind="FolderOpenOutline"
+                                                                Width="14" Height="14"/>
+                                </ui:Button>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- ═════ Col 4 — ПАРАМЕТРЫ (на всю высоту) ═════ -->
+                <Border Grid.Column="4"
+                        Style="{StaticResource GlassCardStaticTight}">
+                    <StackPanel>
+                        <StackPanel Style="{StaticResource CardHeader}">
+                            <iconPacks:PackIconMaterial Kind="Tune"
+                                                        Style="{StaticResource SectionTitleIcon}"/>
+                            <TextBlock Text="Параметры"
+                                       Style="{StaticResource SectionTitle}"/>
+                        </StackPanel>
+
+                        <Grid Style="{StaticResource SettingRow}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        Margin="0,0,12,0">
+                                <TextBlock Text="Подтверждать возврат"
+                                           Style="{StaticResource SettingRowTitle}"/>
+                                <TextBlock Text="Запрос подтверждения при выходе"
+                                           Style="{StaticResource SettingRowSubtitle}"/>
+                            </StackPanel>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ConfirmToggle"
+                                             IsChecked="True"
+                                             VerticalAlignment="Center"
+                                             Checked="ConfirmToggle_Changed"
+                                             Unchecked="ConfirmToggle_Changed"/>
+                        </Grid>
+
+                        <Grid Style="{StaticResource SettingRow}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        Margin="0,0,12,0">
+                                <TextBlock Text="Сворачивать в трей"
+                                           Style="{StaticResource SettingRowTitle}"/>
+                                <TextBlock Text="Скрывать окно после подключения"
+                                           Style="{StaticResource SettingRowSubtitle}"/>
+                            </StackPanel>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="TrayToggle"
+                                             IsChecked="False"
+                                             VerticalAlignment="Center"
+                                             Checked="TrayToggle_Changed"
+                                             Unchecked="TrayToggle_Changed"/>
+                        </Grid>
+
+                        <Grid Style="{StaticResource SettingRow}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        Margin="0,0,12,0">
+                                <TextBlock Text="Запускать с Windows"
+                                           Style="{StaticResource SettingRowTitle}"/>
+                                <TextBlock Text="Автоматический старт при входе"
+                                           Style="{StaticResource SettingRowSubtitle}"/>
+                            </StackPanel>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="AutoStartToggle"
+                                             IsChecked="False"
+                                             VerticalAlignment="Center"
+                                             Checked="AutoStartToggle_Changed"
+                                             Unchecked="AutoStartToggle_Changed"/>
+                        </Grid>
+
+                        <Rectangle Style="{StaticResource CardDivider}"/>
+
+                        <StackPanel Margin="0,0,0,12">
+                            <TextBlock Text="Задержка активации"
+                                       Style="{StaticResource SubLabel}"/>
+                            <ComboBox x:Name="DelayInCombo"
+                                      SelectedIndex="0"
+                                      HorizontalAlignment="Stretch"
+                                      SelectionChanged="AnyConfig_Changed">
+                                <ComboBoxItem Content="Мгновенно"/>
+                                <ComboBoxItem Content="5 секунд"/>
+                                <ComboBoxItem Content="15 секунд"/>
+                                <ComboBoxItem Content="30 секунд"/>
+                                <ComboBoxItem Content="60 секунд"/>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <StackPanel>
+                            <TextBlock Text="Задержка деактивации"
+                                       Style="{StaticResource SubLabel}"/>
+                            <ComboBox x:Name="DelayOutCombo"
+                                      SelectedIndex="1"
+                                      HorizontalAlignment="Stretch"
+                                      SelectionChanged="AnyConfig_Changed">
+                                <ComboBoxItem Content="Мгновенно"/>
+                                <ComboBoxItem Content="5 секунд"/>
+                                <ComboBoxItem Content="15 секунд"/>
+                                <ComboBoxItem Content="30 секунд"/>
+                                <ComboBoxItem Content="60 секунд"/>
+                            </ComboBox>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             НИЖНЯЯ ПАНЕЛЬ
+             ═══════════════════════════════════════════════════════════════ -->
+        <Grid Grid.Row="2" Margin="32,8,32,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Orientation="Horizontal"
+                        VerticalAlignment="Center">
+                <Ellipse x:Name="StatusDot"
+                         Width="8" Height="8"
+                         Fill="{StaticResource ActiveBrush}"
+                         VerticalAlignment="Center">
+                    <Ellipse.Effect>
+                        <DropShadowEffect x:Name="StatusDotGlow"
+                                          Color="{StaticResource ActiveColor}"
+                                          BlurRadius="6"
+                                          ShadowDepth="0"
+                                          Opacity="0.9"/>
+                    </Ellipse.Effect>
+                </Ellipse>
+                <TextBlock x:Name="StatusLabel"
+                           Text="GameShift активен"
+                           FontSize="12"
+                           Margin="8,0,0,0"
+                           Foreground="{StaticResource MutedBrush}"/>
+            </StackPanel>
+
+            <ui:Button Grid.Column="2" Appearance="Transparent"
+                       Foreground="{StaticResource MutedBrush}"
+                       Margin="0,0,8,0"
+                       Click="Reset_Click">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial Kind="Refresh"
+                                                Width="14" Height="14"
+                                                Margin="0,0,8,0"
+                                                VerticalAlignment="Center"/>
+                    <TextBlock Text="Сбросить настройки"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+            </ui:Button>
+
+            <ui:Button Grid.Column="3" Appearance="Transparent"
+                       Foreground="{StaticResource MutedBrush}"
+                       Click="About_Click">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial Kind="InformationOutline"
+                                                Width="14" Height="14"
+                                                Margin="0,0,8,0"
+                                                VerticalAlignment="Center"/>
+                    <TextBlock Text="О программе"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+            </ui:Button>
+        </Grid>
+    </Grid>
+</ui:FluentWindow>
