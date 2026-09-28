@@ -1,4 +1,11 @@
+# ShiftPad
+
+> Plug in a gamepad — your Windows PC switches to the TV, audio follows, Steam Big Picture opens. Unplug it — everything's back.
+
+[shiftpad.ru](https://shiftpad.ru) · [Buy PRO](https://shiftpad.ru/pro) · [Download](https://github.com/APPLEVODKARUS/ShiftPad/releases/latest)
+
 ShiftPad is a small Windows utility for people who use one PC with both a desk monitor and a TV. When you connect a controller it switches the active display to the TV, routes audio to HDMI, and opens Steam Big Picture (or any custom launcher). When you disconnect — display, audio and the launcher all return to the desktop setup.
+
 ## Features
 
 - **Automatic display switching** when a gamepad connects: target-only, extend, or clone.
@@ -16,7 +23,7 @@ ShiftPad is a small Windows utility for people who use one PC with both a desk m
 
 | | |
 |---|---|
-| **Operating system** | Windows 10 (build 1903+, May 2019 Update) and Windows 11 |
+| **Operating system** | Windows 10 version 1903 (May 2019 Update, build 18362) or later, and Windows 11 |
 | **Architecture** | x64 (works on ARM64 via x64 emulation) |
 | **Controllers** | Xbox One/Series, DualShock 4, DualSense (PS5), Switch Pro Controller and Joy-Cons, 8BitDo, Flydigi, GameSir — anything XInput-compatible plus Nintendo HID |
 | **Connection** | USB, wireless dongle, Bluetooth — all the same |
@@ -29,10 +36,8 @@ ShiftPad is a small Windows utility for people who use one PC with both a desk m
 ### Via winget
 
 ```powershell
-winget install ShiftPad
+winget install --id ShiftPad.ShiftPad --exact
 ```
-
-(Pending Microsoft mainline merge — see [microsoft/winget-pkgs#380222](https://github.com/microsoft/winget-pkgs/pull/380222).)
 
 ### Manual installer
 
@@ -51,4 +56,4 @@ After install, open ShiftPad once and configure:
 5. *(optional)* **Activation combo** — record a 2–4 button sequence so a charging controller doesn't trigger anything
 6. *(optional)* **Launchers** — Steam Big Picture and/or a custom path
 
-Close the window. The app sits in the tray. Plug your controller — done.
+Close the window. The app sits in the tray. Plug in your controller — done.
