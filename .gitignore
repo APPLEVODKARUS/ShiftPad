@@ -1,0 +1,5 @@
+# Visual Studio / .NET: результаты сборки и локальные файлы IDE
+bin/
+obj/
+.vs/
+*.user
