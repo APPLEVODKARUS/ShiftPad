@@ -81,10 +81,14 @@ public sealed class TrialLicenseService : ILicenseService
             if (!File.Exists(_storagePath)) return false;
 
             var raw = File.ReadAllText(_storagePath).Trim();
+
+            // RoundtripKind нельзя сочетать с AssumeUniversal: TryParse бросает
+            // ArgumentException, catch ниже его глотал, и триал начинался заново
+            // при каждом запуске.
             if (!DateTime.TryParse(
                     raw,
                     CultureInfo.InvariantCulture,
-                    DateTimeStyles.RoundtripKind | DateTimeStyles.AssumeUniversal,
+                    DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal,
                     out var parsed))
             {
                 return false;

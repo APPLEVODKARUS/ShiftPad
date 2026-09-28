@@ -101,11 +101,7 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
     // ─────────────────────────────────────────────────────────────────
     private void OnGamepadConnected(object? sender, EventArgs e) => RefreshUi();
 
-    private void OnGamepadDisconnected(object? sender, EventArgs e)
-    {
-        if (_isRecording) UpdateActivationComboUi();
-        RefreshUi();
-    }
+    private void OnGamepadDisconnected(object? sender, EventArgs e) => RefreshUi();
 
     private void OnGamepadButtonsPressed(object? sender, GamepadButton[] buttons)
     {
@@ -533,6 +529,10 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
         UpdateHero(isActive);
         UpdateMiniStats(isActive);
 
+        // Подсказка во время записи зависит от подключённого и выбранного
+        // геймпада — обновляем её вместе с остальным UI.
+        if (_isRecording) UpdateActivationComboUi();
+
         PersistSettings();
     }
 
@@ -712,7 +712,10 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
     // ─────────────────────────────────────────────────────────────────
     protected override void OnClosing(CancelEventArgs e)
     {
-        if (_isRecording) _isRecording = false;
+        // Завершаем запись по-честному: просто сбросить флаг нельзя — после
+        // открытия из трея кнопка осталась бы в режиме «Принять», а клик по ней
+        // начал бы новую запись и стёр комбинацию.
+        if (_isRecording) FinishRecording();
 
         bool realShutdown =
             Application.Current is not App app
@@ -738,6 +741,11 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
         Loaded -= OnLoaded;
 
         base.OnClosed(e);
+
+        // ShutdownMode="OnExplicitShutdown": если трей не поднялся, окно закрывается
+        // по-настоящему, и без явного Shutdown процесс остался бы висеть без UI.
+        if (Application.Current is App app && !app.IsRealShutdown)
+            app.ExitApp();
     }
 
     public void RestoreOriginalState()

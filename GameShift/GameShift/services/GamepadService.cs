@@ -76,7 +76,9 @@ public sealed class GamepadService : IGamepadService, IDisposable
     public void Start()
     {
         // События WGI прилетают НЕ на UI-поток — поэтому в обработчиках
-        // делаем _ui.Invoke перед обновлением свойств / fire'ингом наших событий.
+        // делаем _ui.BeginInvoke перед обновлением свойств / fire'ингом наших событий.
+        // Именно асинхронно: синхронный Invoke держит поток WGI, пока UI-поток
+        // выполняет RefreshDevices, который сам обращается к WGI, — риск взаимной блокировки.
         RawGameController.RawGameControllerAdded += OnRawControllerAdded;
         RawGameController.RawGameControllerRemoved += OnRawControllerRemoved;
         WgiGamepad.GamepadAdded += OnGamepadAdded;
@@ -95,10 +97,10 @@ public sealed class GamepadService : IGamepadService, IDisposable
         WgiGamepad.GamepadRemoved -= OnGamepadRemoved;
     }
 
-    private void OnRawControllerAdded(object? sender, RawGameController e) => _ui.Invoke(RefreshDevices);
-    private void OnRawControllerRemoved(object? sender, RawGameController e) => _ui.Invoke(RefreshDevices);
-    private void OnGamepadAdded(object? sender, WgiGamepad e) => _ui.Invoke(RefreshDevices);
-    private void OnGamepadRemoved(object? sender, WgiGamepad e) => _ui.Invoke(RefreshDevices);
+    private void OnRawControllerAdded(object? sender, RawGameController e) => _ui.BeginInvoke(RefreshDevices);
+    private void OnRawControllerRemoved(object? sender, RawGameController e) => _ui.BeginInvoke(RefreshDevices);
+    private void OnGamepadAdded(object? sender, WgiGamepad e) => _ui.BeginInvoke(RefreshDevices);
+    private void OnGamepadRemoved(object? sender, WgiGamepad e) => _ui.BeginInvoke(RefreshDevices);
 
     /// <summary>
     /// Перестраивает список устройств и выбирает активный для опроса.
